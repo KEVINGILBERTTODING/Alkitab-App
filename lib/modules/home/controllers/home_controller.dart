@@ -10,8 +10,6 @@ class HomeController extends GetxController {
   RxList<BookModel> bookModelList = <BookModel>[].obs;
   RxList<int> chapterList = <int>[].obs;
 
-
-
   @override
   void onInit() {
     super.onInit();
@@ -47,7 +45,6 @@ class HomeController extends GetxController {
     var formatter = DateFormat('HH');
     String formatted = formatter.format(now);
     int hour = int.parse(formatted);
-    print(formatted);
 
     // Tentukan waktu berdasarkan jam
     if (hour >= 5 && hour < 12) {
@@ -63,8 +60,8 @@ class HomeController extends GetxController {
 
   void setChapterList(int val) {
     chapterList.clear();
-    for(int i = 1; i <= val; i++) {
+    for (int i = 1; i <= val; i++) {
       chapterList.add(i);
     }
-  } 
+  }
 }
