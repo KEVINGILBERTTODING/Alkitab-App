@@ -44,6 +44,7 @@ class HomeController extends GetxController {
     var formatter = DateFormat('HH');
     String formatted = formatter.format(now);
     int hour = int.parse(formatted);
+    print(formatted);
 
     // Tentukan waktu berdasarkan jam
     if (hour >= 5 && hour < 12) {
