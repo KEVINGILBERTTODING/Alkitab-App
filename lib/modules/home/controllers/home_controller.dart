@@ -8,6 +8,9 @@ class HomeController extends GetxController {
   final apiService = Get.put(ApiService());
   RxBool isLoading = false.obs;
   RxList<BookModel> bookModelList = <BookModel>[].obs;
+  RxList<int> chapterList = <int>[].obs;
+
+
 
   @override
   void onInit() {
@@ -56,4 +59,11 @@ class HomeController extends GetxController {
       return 'Selamat Malam 🌙,';
     }
   }
+
+  void setChapterList(int val) {
+    chapterList.clear();
+    for(int i = 1; i <= val; i++) {
+      chapterList.add(i);
+    }
+  } 
 }

@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:yesheis/core/constans/constans.dart';
 import 'package:yesheis/modules/onboarding/controllers/onboarding_controller.dart';
 import 'package:yesheis/styles/style_app.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class OnboardingView extends GetView<OnBoardingController> {
   const OnboardingView({super.key});
