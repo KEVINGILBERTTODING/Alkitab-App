@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:yesheis/core/constans/constans.dart';
 import 'package:yesheis/modules/home/controllers/home_controller.dart';
 import 'package:yesheis/styles/style_app.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -39,8 +40,12 @@ class HomeView extends GetView<HomeController> {
                       child: Padding(
                         padding: EdgeInsets.all(10.w),
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ClipRRect(
+                            SizedBox(height: 20.h,),
+                           Center(
+                            child:  ClipRRect(
                               borderRadius: BorderRadius.circular(10.w),
                               child: Container(
                                 width: 50.w,
@@ -49,7 +54,200 @@ class HomeView extends GetView<HomeController> {
                                     BoxDecoration(color: Colors.grey[100]),
                               ),
                             ),
-                            Text("Pilih Pasal")
+                           ),
+                            SizedBox(
+                              height: 20.h
+                            ),
+                     
+                             DropdownSearch<String>(
+                                    dropdownDecoratorProps:
+                                        DropDownDecoratorProps(
+                                      baseStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'rbmed',
+                                        fontSize: 12.sp,
+                                      ),
+                                      dropdownSearchDecoration: InputDecoration(
+                                        hintStyle: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'rbmed',
+                                          fontSize: 12.sp,
+                                        ),
+                                        labelText: "Pilih Pasal",
+                                        labelStyle: TextStyle(
+                                            fontFamily: 'rbmed',
+                                            fontSize: 12.sp,
+                                            color: Colors.black),
+                                        hintText: "Temukan atau pilih pasal",
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              12), // Menambahkan border radius pada spinner
+                                        ),
+                                      ),
+                                    ),
+                                    popupProps: PopupProps.menu(
+                                      showSearchBox: true,
+                                      searchFieldProps: TextFieldProps(
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'rbmed',
+                                          fontSize: 12.sp,
+                                        ),
+                                        decoration: InputDecoration(
+                                          labelStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'rbmed',
+                                            fontSize: 12.sp,
+                                          ),
+                                          hintText: 'Pasal', hintStyle: TextStyle(
+                                            fontFamily: 'rbmed',
+                                            fontSize: 12.sp
+                                          ),
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          labelText: 'Cari pasal',
+                                        ),
+                                      ),
+                                      showSelectedItems: true,
+                                      menuProps: MenuProps(
+                                        shape: RoundedRectangleBorder(
+                                          // Menambahkan border radius pada menu
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
+                                        ),
+                                      ),
+                                    ),
+                                     itemAsString: (String id) {
+                                      final listBook = controller
+                                          .bookModelList.value;
+                                      final categoryName = listBook
+                                          .where((item) => item.id == int.parse(id));
+                                         
+                                      return categoryName.first.name!;
+                                    },
+                                    items: controller.bookModelList.value
+                                        .map((item) =>
+                                        item.id.toString())
+                                        .toList(),
+                                    onChanged: (value) {
+                                  
+                                      final dataBook = controller.bookModelList.value;
+                                      final  abbr = dataBook.where((item) => item.id == int.parse(value!)).first.abbr!;
+                                      final  chapter = dataBook.where(
+                                          (item) => item.id == int.parse(value!))
+                                          .first.chapter;
+
+                                      controller.setChapterList(chapter!);
+                                      
+                                      print(abbr);
+                                      print(chapter);
+                                      print(controller.chapterList.toString());
+                                      
+                                      // controller.countDiscount();
+                                      // controller.memberId.value = int.parse(value!);
+                                    }),
+
+                                    SizedBox(
+                              height: 20.h
+                            ),
+                     
+                             DropdownSearch<String>(
+                                    dropdownDecoratorProps:
+                                        DropDownDecoratorProps(
+                                      baseStyle: TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'rbmed',
+                                        fontSize: 12.sp,
+                                      ),
+                                      dropdownSearchDecoration: InputDecoration(
+                                        hintStyle: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'rbmed',
+                                          fontSize: 12.sp,
+                                        ),
+                                        labelText: "Pilih Ayat",
+                                        labelStyle: TextStyle(
+                                            fontFamily: 'rbmed',
+                                            fontSize: 12.sp,
+                                            color: Colors.black),
+                                        hintText: "Temukan atau pilih ayat",
+                                        border: OutlineInputBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              12), // Menambahkan border radius pada spinner
+                                        ),
+                                      ),
+                                    ),
+                                    popupProps: PopupProps.menu(
+                                      showSearchBox: true,
+                                      searchFieldProps: TextFieldProps(
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'rbmed',
+                                          fontSize: 12.sp,
+                                        ),
+                                        decoration: InputDecoration(
+                                          labelStyle: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'rbmed',
+                                            fontSize: 12.sp,
+                                          ),
+                                          hintText: 'Ayat', hintStyle: TextStyle(
+                                            fontFamily: 'rbmed',
+                                            fontSize: 12.sp
+                                          ),
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          labelText: 'Cari pasal',
+                                        ),
+                                      ),
+                                      showSelectedItems: true,
+                                      menuProps: MenuProps(
+                                        shape: RoundedRectangleBorder(
+                                          // Menambahkan border radius pada menu
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(20)),
+                                        ),
+                                      ),
+                                    ),
+                                    
+                                    items: controller.chapterList.value
+                                        .map((item) =>
+                                        item.toString())
+                                        .toList(),
+                                    onChanged: (value) {
+                                      print(value);
+                                      
+                                    }),
+                                    SizedBox(
+                                      height: 20.h,
+                                    ),
+
+                                   Align(
+                                    alignment: Alignment.topRight,
+                                    child: TextButton(onPressed: () {},
+                                    
+                                   style: ButtonStyle(
+                                    
+                                    backgroundColor: WidgetStatePropertyAll(StyleApp.primary),
+                                   ),
+                                    child: Text("Cari", 
+                                   
+                                   style: 
+                                   TextStyle(
+                                    fontFamily: "rbmed",
+                                    fontSize: 14.sp,
+                                    color: Colors.white
+                                   ),
+                                   ),),
+                                   )
                           ],
                         ),
                       ),
