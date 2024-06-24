@@ -1,16 +1,23 @@
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:yesheis/core/constans/response_constans.dart';
 import 'package:yesheis/core/models/book/book_model.dart';
+import 'package:yesheis/core/models/passage/header/headers_model.dart';
+import 'package:yesheis/core/models/passage/verse/verses_model.dart';
 import 'package:yesheis/core/services/api/api_service.dart';
+import 'package:yesheis/styles/style_app.dart';
 
 class HomeController extends GetxController {
   final apiService = Get.put(ApiService());
   RxBool isLoading = false.obs;
   RxList<BookModel> bookModelList = <BookModel>[].obs;
   RxList<int> chapterList = <int>[].obs;
+  int verse = 0;
+  String abbr = "";
+  Rx<HeadersModel> headerModel = HeadersModel().obs;
 
   @override
   void onInit() {
@@ -21,11 +28,10 @@ class HomeController extends GetxController {
   // Metode async terpisah
   Future<void> _initialize() async {
     await getBook();
-    await getChapter("mat", 2);
+    await getChapter("kej", 1);
   }
 
   Future<void> getBook() async {
-    print('get data');
     bookModelList.clear();
 
     final dataBook = await apiService.getBook();
@@ -35,13 +41,24 @@ class HomeController extends GetxController {
 
       return;
     } else {
-      Get.snackbar("Notifikasi", dataBook.message ?? "Terjadi kesalahan");
+      Get.snackbar("Notifikasi", dataBook.message ?? "Terjadi kesalahan",
+          backgroundColor: Colors.red[50], colorText: StyleApp.black);
     }
   }
 
   Future<void> getChapter(String abbr, int verse) async {
+    isLoading.value = true;
     final responseApi = await apiService.getChapter(abbr, verse);
-    print(responseApi.toString());
+    isLoading.value = false;
+
+    if (responseApi.state == ResponseConstans.success_message) {
+      headerModel.value = HeadersModel();
+      headerModel.value = responseApi.data;
+      print(headerModel.toString());
+    } else {
+      Get.snackbar("Notifikasi", responseApi.message ?? "Terjadi kesalahan",
+          backgroundColor: Colors.red[50], colorText: StyleApp.black);
+    }
   }
 
   String getTimeOfDay() {
