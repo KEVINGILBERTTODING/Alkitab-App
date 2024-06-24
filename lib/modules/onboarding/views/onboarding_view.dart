@@ -12,6 +12,7 @@ class OnboardingView extends GetView<OnBoardingController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: StyleApp.white,
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.all(8.0),
