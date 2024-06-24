@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:yesheis/core/constans/response_constans.dart';
@@ -19,6 +21,7 @@ class HomeController extends GetxController {
   // Metode async terpisah
   Future<void> _initialize() async {
     await getBook();
+    await getChapter("mat", 2);
   }
 
   Future<void> getBook() async {
@@ -34,6 +37,11 @@ class HomeController extends GetxController {
     } else {
       Get.snackbar("Notifikasi", dataBook.message ?? "Terjadi kesalahan");
     }
+  }
+
+  Future<void> getChapter(String abbr, int verse) async {
+    final responseApi = await apiService.getChapter(abbr, verse);
+    print(responseApi.toString());
   }
 
   String getTimeOfDay() {

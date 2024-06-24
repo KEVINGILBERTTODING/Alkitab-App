@@ -8,7 +8,7 @@ part 'chapter_model.g.dart';
 class ChapterModel with _$ChapterModel {
   const factory ChapterModel({
     String? chap,
-    VersesModel? verses,
+    List<VersesModel>? verses,
   }) = _ChapterModel;
 
   factory ChapterModel.fromJson(Map<String, dynamic> json) =>

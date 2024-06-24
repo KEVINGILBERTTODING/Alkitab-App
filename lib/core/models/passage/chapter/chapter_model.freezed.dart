@@ -21,7 +21,7 @@ ChapterModel _$ChapterModelFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ChapterModel {
   String? get chap => throw _privateConstructorUsedError;
-  VersesModel? get verses => throw _privateConstructorUsedError;
+  List<VersesModel>? get verses => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,9 +35,7 @@ abstract class $ChapterModelCopyWith<$Res> {
           ChapterModel value, $Res Function(ChapterModel) then) =
       _$ChapterModelCopyWithImpl<$Res, ChapterModel>;
   @useResult
-  $Res call({String? chap, VersesModel? verses});
-
-  $VersesModelCopyWith<$Res>? get verses;
+  $Res call({String? chap, List<VersesModel>? verses});
 }
 
 /// @nodoc
@@ -64,20 +62,8 @@ class _$ChapterModelCopyWithImpl<$Res, $Val extends ChapterModel>
       verses: freezed == verses
           ? _value.verses
           : verses // ignore: cast_nullable_to_non_nullable
-              as VersesModel?,
+              as List<VersesModel>?,
     ) as $Val);
-  }
-
-  @override
-  @pragma('vm:prefer-inline')
-  $VersesModelCopyWith<$Res>? get verses {
-    if (_value.verses == null) {
-      return null;
-    }
-
-    return $VersesModelCopyWith<$Res>(_value.verses!, (value) {
-      return _then(_value.copyWith(verses: value) as $Val);
-    });
   }
 }
 
@@ -89,10 +75,7 @@ abstract class _$$ChapterModelImplCopyWith<$Res>
       __$$ChapterModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String? chap, VersesModel? verses});
-
-  @override
-  $VersesModelCopyWith<$Res>? get verses;
+  $Res call({String? chap, List<VersesModel>? verses});
 }
 
 /// @nodoc
@@ -115,9 +98,9 @@ class __$$ChapterModelImplCopyWithImpl<$Res>
           : chap // ignore: cast_nullable_to_non_nullable
               as String?,
       verses: freezed == verses
-          ? _value.verses
+          ? _value._verses
           : verses // ignore: cast_nullable_to_non_nullable
-              as VersesModel?,
+              as List<VersesModel>?,
     ));
   }
 }
@@ -125,15 +108,23 @@ class __$$ChapterModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$ChapterModelImpl implements _ChapterModel {
-  const _$ChapterModelImpl({this.chap, this.verses});
+  const _$ChapterModelImpl({this.chap, final List<VersesModel>? verses})
+      : _verses = verses;
 
   factory _$ChapterModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChapterModelImplFromJson(json);
 
   @override
   final String? chap;
+  final List<VersesModel>? _verses;
   @override
-  final VersesModel? verses;
+  List<VersesModel>? get verses {
+    final value = _verses;
+    if (value == null) return null;
+    if (_verses is EqualUnmodifiableListView) return _verses;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
@@ -146,12 +137,13 @@ class _$ChapterModelImpl implements _ChapterModel {
         (other.runtimeType == runtimeType &&
             other is _$ChapterModelImpl &&
             (identical(other.chap, chap) || other.chap == chap) &&
-            (identical(other.verses, verses) || other.verses == verses));
+            const DeepCollectionEquality().equals(other._verses, _verses));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, chap, verses);
+  int get hashCode => Object.hash(
+      runtimeType, chap, const DeepCollectionEquality().hash(_verses));
 
   @JsonKey(ignore: true)
   @override
@@ -168,8 +160,9 @@ class _$ChapterModelImpl implements _ChapterModel {
 }
 
 abstract class _ChapterModel implements ChapterModel {
-  const factory _ChapterModel({final String? chap, final VersesModel? verses}) =
-      _$ChapterModelImpl;
+  const factory _ChapterModel(
+      {final String? chap,
+      final List<VersesModel>? verses}) = _$ChapterModelImpl;
 
   factory _ChapterModel.fromJson(Map<String, dynamic> json) =
       _$ChapterModelImpl.fromJson;
@@ -177,7 +170,7 @@ abstract class _ChapterModel implements ChapterModel {
   @override
   String? get chap;
   @override
-  VersesModel? get verses;
+  List<VersesModel>? get verses;
   @override
   @JsonKey(ignore: true)
   _$$ChapterModelImplCopyWith<_$ChapterModelImpl> get copyWith =>

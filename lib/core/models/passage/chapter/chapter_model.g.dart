@@ -9,9 +9,9 @@ part of 'chapter_model.dart';
 _$ChapterModelImpl _$$ChapterModelImplFromJson(Map<String, dynamic> json) =>
     _$ChapterModelImpl(
       chap: json['chap'] as String?,
-      verses: json['verses'] == null
-          ? null
-          : VersesModel.fromJson(json['verses'] as Map<String, dynamic>),
+      verses: (json['verses'] as List<dynamic>?)
+          ?.map((e) => VersesModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$ChapterModelImplToJson(_$ChapterModelImpl instance) =>
