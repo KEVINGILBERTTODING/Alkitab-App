@@ -337,7 +337,7 @@ class HomeView extends GetView<HomeController> {
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(vertical: 4.h),
                   child: Text(
-                    "Simpan",
+                    "Cari",
                     style: TextStyle(
                       fontFamily: "rbbold",
                       fontSize: 14.sp,

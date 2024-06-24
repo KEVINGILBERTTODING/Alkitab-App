@@ -18,7 +18,6 @@ class HomeController extends GetxController {
 
   // Metode async terpisah
   Future<void> _initialize() async {
-    print('sdsd');
     await getBook();
   }
 
@@ -26,9 +25,8 @@ class HomeController extends GetxController {
     print('get data');
     bookModelList.clear();
 
-    isLoading.value = true;
     final dataBook = await apiService.getBook();
-    isLoading.value = false;
+
     if (dataBook.state == ResponseConstans.success_state) {
       bookModelList.addAll(dataBook.data);
 
