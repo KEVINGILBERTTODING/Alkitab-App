@@ -132,21 +132,37 @@ class HomeView extends GetView<HomeController> {
                                           SizedBox(
                                             height: 5.h,
                                           ),
-                                          RichText(
-                                            text: TextSpan(
-                                              children: [
-                                                TextSpan(
-                                                    text:
-                                                        '${versesList[index].number} ',
-                                                    style: StyleApp.styleBold(
-                                                        10.sp,
-                                                        StyleApp.primary)),
-                                                TextSpan(
-                                                    text:
-                                                        versesList[index].text,
-                                                    style: StyleApp.styleReg(
-                                                        16.sp, StyleApp.black)),
-                                              ],
+                                          GestureDetector(
+                                            onTap: () {
+                                              if (versesList[index].text !=
+                                                  null) {
+                                                controller.verseSelected.value =
+                                                    versesList[index].text!;
+                                                Get.bottomSheet(
+                                                        bottomSheetVerse(
+                                                            controller))
+                                                    .whenComplete(() {
+                                                  controller.resetState();
+                                                });
+                                              }
+                                            },
+                                            child: RichText(
+                                              text: TextSpan(
+                                                children: [
+                                                  TextSpan(
+                                                      text:
+                                                          '${versesList[index].number} ',
+                                                      style: StyleApp.styleBold(
+                                                          10.sp,
+                                                          StyleApp.primary)),
+                                                  TextSpan(
+                                                      text: versesList[index]
+                                                          .text,
+                                                      style: StyleApp.styleReg(
+                                                          16.sp,
+                                                          StyleApp.black)),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         ],
@@ -162,6 +178,84 @@ class HomeView extends GetView<HomeController> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Container bottomSheetVerse(HomeController controller) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: StyleApp.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.w),
+          topRight: Radius.circular(20.w),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(20.w),
+        child: SingleChildScrollView(
+          child: Expanded(
+              child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.w),
+                  child: Container(
+                    width: 50.w,
+                    height: 6.h,
+                    decoration: BoxDecoration(color: Colors.grey[100]),
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: 20.h,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: 20.w,
+                  ),
+                  Obx(
+                    () => IconButton(
+                      onPressed: () {
+                        if (controller.isPlaying.value != true) {
+                          controller.voiceSpeak();
+                        } else {
+                          controller.voiceStop();
+                        }
+                      },
+                      icon: Icon(
+                        controller.isPlaying.value
+                            ? Icons.stop
+                            : Icons.play_arrow_outlined,
+                        color: StyleApp.white,
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            WidgetStatePropertyAll(StyleApp.primary),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 10.h,
+              ),
+              Text(
+                controller.verseSelected.value.toString(),
+                style: StyleApp.styleReg(
+                  16.sp,
+                  StyleApp.black,
+                ),
+              ),
+            ],
+          )),
         ),
       ),
     );

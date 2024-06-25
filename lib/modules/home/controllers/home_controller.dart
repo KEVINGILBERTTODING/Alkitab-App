@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:yesheis/core/constans/response_constans.dart';
@@ -18,6 +19,10 @@ class HomeController extends GetxController {
   int verse = 0;
   String abbr = "";
   Rx<HeadersModel> headerModel = HeadersModel().obs;
+  RxString verseSelected = "".obs;
+  RxString abbrSelected = "".obs;
+  RxBool isPlaying = false.obs;
+  FlutterTts flutterTts = FlutterTts();
 
   @override
   void onInit() {
@@ -79,6 +84,33 @@ class HomeController extends GetxController {
     } else {
       return 'Selamat Malam 🌙,';
     }
+  }
+
+  void resetState() {
+    if (isPlaying.value) {
+      voiceStop();
+    }
+
+    verseSelected.value = "";
+    abbrSelected.value = "";
+    isPlaying.value = false;
+  }
+
+  void voiceSpeak() async {
+    await flutterTts.setLanguage("id-ID");
+    await flutterTts.setPitch(1.0);
+    await flutterTts.speak(verseSelected.value);
+    isPlaying.value = true;
+  }
+
+  void voiceStop() async {
+    await flutterTts.pause();
+
+    isPlaying.value = false;
+  }
+
+  void setVerseSelected(String val) {
+    verseSelected.value = val;
   }
 
   void setChapterList(int val) {

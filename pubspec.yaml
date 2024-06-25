@@ -27,6 +27,7 @@ dependencies:
   fl_chart: ^0.68.0
   date_picker_plus: ^4.0.0
   shimmer: ^3.0.0
+  flutter_tts: ^4.0.2
 
 dev_dependencies:
   flutter_test:
