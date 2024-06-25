@@ -16,8 +16,8 @@ class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   RxList<BookModel> bookModelList = <BookModel>[].obs;
   RxList<int> chapterList = <int>[].obs;
-  int verse = 0;
-  String abbr = "";
+  int verse = 1;
+  String abbr = "kej";
   Rx<HeadersModel> headerModel = HeadersModel().obs;
   RxString verseSelected = "".obs;
   RxString abbrSelected = "".obs;

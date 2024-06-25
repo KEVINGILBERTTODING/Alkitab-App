@@ -136,8 +136,13 @@ class HomeView extends GetView<HomeController> {
                                             onTap: () {
                                               if (versesList[index].text !=
                                                   null) {
+                                                final abbrVerseSelected =
+                                                    '${controller.headerModel.value.bible?.book?.name.toString()} ${controller.verse} : ${controller.headerModel.value.bible?.book?.chapter?.verses?[index].number}';
                                                 controller.verseSelected.value =
                                                     versesList[index].text!;
+                                                controller.abbrSelected.value =
+                                                    abbrVerseSelected;
+
                                                 Get.bottomSheet(
                                                         bottomSheetVerse(
                                                             controller))
@@ -246,6 +251,16 @@ class HomeView extends GetView<HomeController> {
               ),
               SizedBox(
                 height: 10.h,
+              ),
+              Text(
+                controller.abbrSelected.toString(),
+                style: StyleApp.styleMed(
+                  18.sp,
+                  StyleApp.black,
+                ),
+              ),
+              SizedBox(
+                height: 8.h,
               ),
               Text(
                 controller.verseSelected.value.toString(),
