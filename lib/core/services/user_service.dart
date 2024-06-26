@@ -20,4 +20,22 @@ class UserService extends GetxService {
     await _sharedPreferences.setBool(Constans.PREF_FIRST_TIME, val);
     return;
   }
+
+  Future<void> saveInt(String key, int val) async {
+    await _sharedPreferences.setInt(key, val);
+    return;
+  }
+
+  Future<void> saveString(String key, String val) async {
+    await _sharedPreferences.setString(key, val);
+    return;
+  }
+
+  String getString(String key) {
+    return _sharedPreferences.getString(key) ?? "";
+  }
+
+  int getInt(String key) {
+    return _sharedPreferences.getInt(key) ?? 0;
+  }
 }

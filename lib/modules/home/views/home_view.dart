@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:path/path.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yesheis/core/constans/constans.dart';
 import 'package:yesheis/modules/home/controllers/home_controller.dart';
@@ -56,111 +57,7 @@ class HomeView extends GetView<HomeController> {
                       onTap: () async {
                         await controller.getVerseSaved();
                         Get.bottomSheet(
-                          Container(
-                            decoration: BoxDecoration(
-                              color: StyleApp.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20.w),
-                                topRight: Radius.circular(20.w),
-                              ),
-                            ),
-                            child: Padding(
-                              padding: EdgeInsets.all(20.w),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Center(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(10.w),
-                                      child: Container(
-                                        width: 50.w,
-                                        height: 6.h,
-                                        decoration: BoxDecoration(
-                                            color: Colors.grey[100]),
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 20.h,
-                                  ),
-                                  Text(
-                                    "Ayat Tersimpan ✨",
-                                    style: StyleApp.styleBold(
-                                        18.sp, StyleApp.black),
-                                  ),
-                                  SizedBox(
-                                    height: 8.h,
-                                  ),
-                                  Obx(
-                                    () => Expanded(
-                                      child: controller
-                                              .databaseModelList.isEmpty
-                                          ? Center(
-                                              child: Column(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                children: [
-                                                  Text(
-                                                    "Tidak ada data",
-                                                    style: StyleApp.styleBold(
-                                                        15.sp, StyleApp.black),
-                                                  ),
-                                                  Text(
-                                                    "Belum ada ayat yang kamu simpan nihh..",
-                                                    style: StyleApp.styleReg(
-                                                        13.sp, StyleApp.black),
-                                                  ),
-                                                ],
-                                              ),
-                                            )
-                                          : ListView.builder(
-                                              padding: EdgeInsets.zero,
-                                              itemCount: controller
-                                                  .databaseModelList.length,
-                                              itemBuilder: (context, index) {
-                                                final databaseList = controller
-                                                    .databaseModelList[index];
-                                                return ListTile(
-                                                  contentPadding:
-                                                      EdgeInsets.zero,
-                                                  title: Text(
-                                                    databaseList.abbr_verse
-                                                        .toString(),
-                                                    style: StyleApp.styleMed(
-                                                        15.sp, StyleApp.black),
-                                                  ),
-                                                  subtitle: Text(
-                                                    databaseList.text!
-                                                        .toString(),
-                                                    style: StyleApp.styleReg(
-                                                        15.sp, StyleApp.black),
-                                                  ),
-                                                  trailing: Expanded(
-                                                      child: IconButton(
-                                                    onPressed: () async {
-                                                      final idVerse =
-                                                          databaseList.id!;
-                                                      await controller
-                                                          .removeVerseSaved(
-                                                              idVerse, index);
-                                                    },
-                                                    icon: Icon(
-                                                      Icons.bookmark_outlined,
-                                                      color: StyleApp.primary,
-                                                    ),
-                                                  )),
-                                                );
-                                              },
-                                            ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+                          bottom_sheet_bookmark(controller),
                         );
                       },
                       child: Icon(
@@ -322,6 +219,99 @@ class HomeView extends GetView<HomeController> {
     );
   }
 
+  Container bottom_sheet_bookmark(HomeController controller) {
+    return Container(
+      decoration: BoxDecoration(
+        color: StyleApp.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20.w),
+          topRight: Radius.circular(20.w),
+        ),
+      ),
+      child: Padding(
+        padding: EdgeInsets.all(20.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.w),
+                child: Container(
+                  width: 50.w,
+                  height: 6.h,
+                  decoration: BoxDecoration(color: Colors.grey[100]),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20.h,
+            ),
+            Text(
+              "Ayat Tersimpan ✨",
+              style: StyleApp.styleBold(18.sp, StyleApp.black),
+            ),
+            SizedBox(
+              height: 8.h,
+            ),
+            Obx(
+              () => Expanded(
+                child: controller.databaseModelList.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Tidak ada data",
+                              style: StyleApp.styleBold(15.sp, StyleApp.black),
+                            ),
+                            Text(
+                              "Belum ada ayat yang kamu simpan nihh..",
+                              style: StyleApp.styleReg(13.sp, StyleApp.black),
+                            ),
+                          ],
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: EdgeInsets.zero,
+                        itemCount: controller.databaseModelList.length,
+                        itemBuilder: (context, index) {
+                          final databaseList =
+                              controller.databaseModelList[index];
+                          return ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: Text(
+                              databaseList.abbr_verse.toString(),
+                              style: StyleApp.styleMed(15.sp, StyleApp.black),
+                            ),
+                            subtitle: Text(
+                              databaseList.text!.toString(),
+                              style: StyleApp.styleReg(15.sp, StyleApp.black),
+                            ),
+                            trailing: Expanded(
+                                child: IconButton(
+                              onPressed: () async {
+                                final idVerse = databaseList.id!;
+                                await controller.removeVerseSaved(
+                                    idVerse, index);
+                              },
+                              icon: Icon(
+                                Icons.bookmark_outlined,
+                                color: StyleApp.primary,
+                              ),
+                            )),
+                          );
+                        },
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Container bottomSheetVerse(HomeController controller) {
     return Container(
       width: double.infinity,
@@ -456,6 +446,11 @@ class HomeView extends GetView<HomeController> {
                 ),
               ),
               SizedBox(height: 20.h),
+              Text(
+                "Pilih kitab dan ayat 😍",
+                style: StyleApp.styleBold(18.sp, StyleApp.black),
+              ),
+              SizedBox(height: 20.h),
               DropdownSearch<String>(
                   dropdownDecoratorProps: DropDownDecoratorProps(
                     baseStyle: TextStyle(
@@ -541,9 +536,6 @@ class HomeView extends GetView<HomeController> {
                     print(abbr);
                     print(chapter);
                     print(controller.chapterList.toString());
-
-                    // controller.countDiscount();
-                    // controller.memberId.value = int.parse(value!);
                   }),
               SizedBox(height: 20.h),
               Obx(
@@ -637,6 +629,8 @@ class HomeView extends GetView<HomeController> {
 
                   print('abbr: ${controller.abbr}, verse: ${controller.verse}');
 
+                  await controller.saveLastVerse();
+
                   await controller.getChapter(
                       controller.abbr, controller.verse);
                 },
@@ -648,12 +642,8 @@ class HomeView extends GetView<HomeController> {
                   alignment: Alignment.center,
                   padding: EdgeInsets.symmetric(vertical: 4.h),
                   child: Text(
-                    "Cari",
-                    style: TextStyle(
-                      fontFamily: "rbbold",
-                      fontSize: 14.sp,
-                      color: Colors.white,
-                    ),
+                    "Temukan Ayat",
+                    style: StyleApp.styleBold(15.sp, StyleApp.white),
                   ),
                 ),
               ),

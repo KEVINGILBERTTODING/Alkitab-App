@@ -1,4 +1,6 @@
 class Constans {
+  static const INIT_LAST_ABBR = "kej";
+  static const INIT_LAST_VERSE = 1;
   static const PREF_FIRST_TIME = 'pref_first_time';
   static const APPNAME = 'Firman Hidup';
   static const TXT_ONBOARDING =
@@ -8,4 +10,6 @@ class Constans {
 
   static const DB_SAVE_VERSE = 'db_verse.db';
   static const FIELD_DB = 'save_verse_db';
+  static const PREF_LAST_ABBR_SAVED = "pref_last_abbr";
+  static const PREF_LAST_VERSE_SAVED = "pref_last_verse";
 }

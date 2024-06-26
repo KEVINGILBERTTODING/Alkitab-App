@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:yesheis/core/constans/constans.dart';
 import 'package:yesheis/core/constans/response_constans.dart';
 import 'package:yesheis/core/models/book/book_model.dart';
 import 'package:yesheis/core/models/database/database_model.dart';
@@ -13,6 +14,7 @@ import 'package:yesheis/core/models/passage/header/headers_model.dart';
 import 'package:yesheis/core/models/passage/verse/verses_model.dart';
 import 'package:yesheis/core/services/api/api_service.dart';
 import 'package:yesheis/core/services/db/database_service.dart';
+import 'package:yesheis/core/services/user_service.dart';
 import 'package:yesheis/styles/style_app.dart';
 
 class HomeController extends GetxController {
@@ -20,8 +22,8 @@ class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   RxList<BookModel> bookModelList = <BookModel>[].obs;
   RxList<int> chapterList = <int>[].obs;
-  int verse = 1;
-  String abbr = "kej";
+  int verse = 0;
+  String abbr = "";
   Rx<HeadersModel> headerModel = HeadersModel().obs;
   RxString verseSelected = "".obs;
   RxString abbrSelected = "".obs;
@@ -32,6 +34,7 @@ class HomeController extends GetxController {
   RxBool isLoadingLoadSavedVerse = false.obs;
   RxList<DatabaseModel> databaseModelList = <DatabaseModel>[].obs;
   late DatabaseService databaseService;
+  late UserService userService;
 
   @override
   void onInit() async {
@@ -41,10 +44,27 @@ class HomeController extends GetxController {
 
   // Metode async terpisah
   Future<void> _initialize() async {
+    userService = Get.find<UserService>();
+    await initLastAbbrVerse();
     await getBook();
-    await getChapter("kej", 1);
     databaseService = Get.find<DatabaseService>();
     await databaseService.database;
+  }
+
+  Future initLastAbbrVerse() async {
+    String lastAbbr =
+        await userService.getString(Constans.PREF_LAST_ABBR_SAVED);
+    int lastVerse = await userService.getInt(Constans.PREF_LAST_VERSE_SAVED);
+
+    if (lastAbbr != "" && lastVerse != 0) {
+      abbr = lastAbbr;
+      verse = lastVerse;
+    } else {
+      abbr = Constans.INIT_LAST_ABBR;
+      verse = Constans.INIT_LAST_VERSE;
+    }
+
+    return await getChapter(abbr, verse);
   }
 
   Future<void> getBook() async {
@@ -175,6 +195,13 @@ class HomeController extends GetxController {
       Get.snackbar("Error", "Yahh, gagal menyimpan ayat");
       print(e.toString());
       return;
+    }
+  }
+
+  Future<void> saveLastVerse() async {
+    if (abbr != "" && verse != 0) {
+      await userService.saveString(Constans.PREF_LAST_ABBR_SAVED, abbr);
+      await userService.saveInt(Constans.PREF_LAST_VERSE_SAVED, verse);
     }
   }
 
