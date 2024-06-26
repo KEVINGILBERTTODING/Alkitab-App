@@ -3,12 +3,16 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
+import 'package:get/get_rx/get_rx.dart';
 import 'package:intl/intl.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:yesheis/core/constans/response_constans.dart';
 import 'package:yesheis/core/models/book/book_model.dart';
+import 'package:yesheis/core/models/database/database_model.dart';
 import 'package:yesheis/core/models/passage/header/headers_model.dart';
 import 'package:yesheis/core/models/passage/verse/verses_model.dart';
 import 'package:yesheis/core/services/api/api_service.dart';
+import 'package:yesheis/core/services/db/database_service.dart';
 import 'package:yesheis/styles/style_app.dart';
 
 class HomeController extends GetxController {
@@ -21,19 +25,26 @@ class HomeController extends GetxController {
   Rx<HeadersModel> headerModel = HeadersModel().obs;
   RxString verseSelected = "".obs;
   RxString abbrSelected = "".obs;
+  String idDatabase = "";
   RxBool isPlaying = false.obs;
   FlutterTts flutterTts = FlutterTts();
+  RxBool isVerseSaved = false.obs;
+  RxBool isLoadingLoadSavedVerse = false.obs;
+  RxList<DatabaseModel> databaseModelList = <DatabaseModel>[].obs;
+  late DatabaseService databaseService;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    _initialize();
+    await _initialize();
   }
 
   // Metode async terpisah
   Future<void> _initialize() async {
     await getBook();
     await getChapter("kej", 1);
+    databaseService = Get.find<DatabaseService>();
+    await databaseService.database;
   }
 
   Future<void> getBook() async {
@@ -86,6 +97,27 @@ class HomeController extends GetxController {
     }
   }
 
+  Future<void> getVerseSaved() async {
+    isLoadingLoadSavedVerse.value = true;
+    databaseModelList.clear();
+
+    try {
+      final databaseList = await databaseService.getVerseSaved();
+      if (databaseList.isNotEmpty) {
+        databaseModelList.addAll(databaseList);
+      }
+      isLoadingLoadSavedVerse.value = false;
+
+      return;
+    } catch (e) {
+      isLoadingLoadSavedVerse.value = false;
+
+      Get.snackbar("Gagal", "Terjadi kesalahan");
+      print(e.toString());
+      return;
+    }
+  }
+
   void resetState() {
     if (isPlaying.value) {
       voiceStop();
@@ -94,6 +126,7 @@ class HomeController extends GetxController {
     verseSelected.value = "";
     abbrSelected.value = "";
     isPlaying.value = false;
+    isVerseSaved.value = false;
   }
 
   void voiceSpeak() async {
@@ -107,6 +140,41 @@ class HomeController extends GetxController {
     await flutterTts.pause();
 
     isPlaying.value = false;
+  }
+
+  void validateDataSavedVerse() {
+    if (idDatabase.isEmpty ||
+        idDatabase == "" ||
+        abbrSelected.value.isEmpty ||
+        abbrSelected.value == "" ||
+        verseSelected.value.isEmpty ||
+        verseSelected.value == "") {
+      print(idDatabase);
+      print(abbrSelected.value);
+      print(verseSelected.value);
+      Get.snackbar("Gagal", "Silahkan pilih ayat terlebih dahulu");
+      return;
+    }
+    DatabaseModel databaseModel = DatabaseModel(
+        id: idDatabase,
+        abbr_verse: abbrSelected.value,
+        text: verseSelected.value);
+    saveVerse(databaseModel);
+  }
+
+  Future<void> saveVerse(DatabaseModel databaseModel) async {
+    try {
+      await databaseService.insertVerse(databaseModel);
+      isVerseSaved.value = true;
+
+      Get.snackbar("Berhasil", "Ayat berhasil disimpan",
+          backgroundColor: StyleApp.primary, colorText: StyleApp.white);
+      return;
+    } catch (e) {
+      Get.snackbar("Error", "Gagal menyimpan ayat");
+      print(e.toString());
+      return;
+    }
   }
 
   void setVerseSelected(String val) {

@@ -138,10 +138,15 @@ class HomeView extends GetView<HomeController> {
                                                   null) {
                                                 final abbrVerseSelected =
                                                     '${controller.headerModel.value.bible?.book?.name.toString()} ${controller.verse} : ${controller.headerModel.value.bible?.book?.chapter?.verses?[index].number}';
+                                                final idDbGenerate =
+                                                    '${controller.headerModel.value.bible?.book?.book_id!}-${controller.verse}-${controller.headerModel.value.bible?.book?.chapter?.verses?[index].number}';
                                                 controller.verseSelected.value =
                                                     versesList[index].text!;
                                                 controller.abbrSelected.value =
                                                     abbrVerseSelected;
+
+                                                controller.idDatabase =
+                                                    idDbGenerate.toString();
 
                                                 Get.bottomSheet(
                                                         bottomSheetVerse(
@@ -225,6 +230,23 @@ class HomeView extends GetView<HomeController> {
                 children: [
                   SizedBox(
                     width: 20.w,
+                  ),
+                  Obx(
+                    () => IconButton(
+                      onPressed: () {
+                        controller.validateDataSavedVerse();
+                      },
+                      icon: Icon(
+                        controller.isVerseSaved.value
+                            ? Icons.check
+                            : Icons.bookmark_add_outlined,
+                        color: StyleApp.black,
+                      ),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            WidgetStatePropertyAll(StyleApp.banner),
+                      ),
+                    ),
                   ),
                   Obx(
                     () => IconButton(

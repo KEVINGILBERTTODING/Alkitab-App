@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:yesheis/core/services/db/database_service.dart';
 import 'package:yesheis/core/services/user_service.dart';
 import 'package:yesheis/modules/home/bindings/home_binding.dart';
 import 'package:yesheis/routes/app_pages.dart';
@@ -10,8 +11,10 @@ void main() async {
   final userService = await Get.putAsync(() async {
     final service = UserService();
     await service.initSharedPref();
+
     return service;
   });
+  await Get.putAsync<DatabaseService>(() async => DatabaseService());
 
   final isFirsttime = userService.isFirstTime();
 
