@@ -48,6 +48,135 @@ class HomeView extends GetView<HomeController> {
                     ),
                   ),
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        await controller.getVerseSaved();
+                        Get.bottomSheet(
+                          Container(
+                            decoration: BoxDecoration(
+                              color: StyleApp.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20.w),
+                                topRight: Radius.circular(20.w),
+                              ),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsets.all(20.w),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Center(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.w),
+                                      child: Container(
+                                        width: 50.w,
+                                        height: 6.h,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[100]),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 20.h,
+                                  ),
+                                  Text(
+                                    "Ayat Tersimpan ✨",
+                                    style: StyleApp.styleBold(
+                                        18.sp, StyleApp.black),
+                                  ),
+                                  SizedBox(
+                                    height: 8.h,
+                                  ),
+                                  Obx(
+                                    () => Expanded(
+                                      child: controller
+                                              .databaseModelList.isEmpty
+                                          ? Center(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                    "Tidak ada data",
+                                                    style: StyleApp.styleBold(
+                                                        15.sp, StyleApp.black),
+                                                  ),
+                                                  Text(
+                                                    "Belum ada ayat yang kamu simpan nihh..",
+                                                    style: StyleApp.styleReg(
+                                                        13.sp, StyleApp.black),
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          : ListView.builder(
+                                              padding: EdgeInsets.zero,
+                                              itemCount: controller
+                                                  .databaseModelList.length,
+                                              itemBuilder: (context, index) {
+                                                final databaseList = controller
+                                                    .databaseModelList[index];
+                                                return ListTile(
+                                                  contentPadding:
+                                                      EdgeInsets.zero,
+                                                  title: Text(
+                                                    databaseList.abbr_verse
+                                                        .toString(),
+                                                    style: StyleApp.styleMed(
+                                                        15.sp, StyleApp.black),
+                                                  ),
+                                                  subtitle: Text(
+                                                    databaseList.text!
+                                                        .toString(),
+                                                    style: StyleApp.styleReg(
+                                                        15.sp, StyleApp.black),
+                                                  ),
+                                                  trailing: Expanded(
+                                                      child: IconButton(
+                                                    onPressed: () async {
+                                                      final idVerse =
+                                                          databaseList.id!;
+                                                      await controller
+                                                          .removeVerseSaved(
+                                                              idVerse, index);
+                                                    },
+                                                    icon: Icon(
+                                                      Icons.bookmark_outlined,
+                                                      color: StyleApp.primary,
+                                                    ),
+                                                  )),
+                                                );
+                                              },
+                                            ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Icon(
+                        Icons.bookmark_border_outlined,
+                        color: StyleApp.light_black,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                    Icon(
+                      Icons.settings_outlined,
+                      color: StyleApp.light_black,
+                    )
+                  ],
+                ),
                 SizedBox(
                   height: 20.h,
                 ),

@@ -6,6 +6,7 @@ class StyleApp {
   static const Color white = Color(0xffffffff);
   static const Color grey = Color.fromARGB(255, 235, 235, 235);
   static const Color black = Colors.black;
+  static const Color light_black = Color.fromARGB(255, 68, 68, 68);
 
   static styleBold(double size, Color color) {
     return TextStyle(fontFamily: 'rbbold', fontSize: size, color: color);

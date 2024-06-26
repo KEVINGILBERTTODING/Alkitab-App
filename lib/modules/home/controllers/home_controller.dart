@@ -107,12 +107,13 @@ class HomeController extends GetxController {
         databaseModelList.addAll(databaseList);
       }
       isLoadingLoadSavedVerse.value = false;
+      print(databaseModelList.toString());
 
       return;
     } catch (e) {
       isLoadingLoadSavedVerse.value = false;
 
-      Get.snackbar("Gagal", "Terjadi kesalahan");
+      Get.snackbar("Gagal", "Ooops,Terjadi kesalahan");
       print(e.toString());
       return;
     }
@@ -152,7 +153,7 @@ class HomeController extends GetxController {
       print(idDatabase);
       print(abbrSelected.value);
       print(verseSelected.value);
-      Get.snackbar("Gagal", "Silahkan pilih ayat terlebih dahulu");
+      Get.snackbar("Gagal", "Oops, pilih ayat terlebih dahulu");
       return;
     }
     DatabaseModel databaseModel = DatabaseModel(
@@ -167,11 +168,11 @@ class HomeController extends GetxController {
       await databaseService.insertVerse(databaseModel);
       isVerseSaved.value = true;
 
-      Get.snackbar("Berhasil", "Ayat berhasil disimpan",
+      Get.snackbar("Berhasil", "Yeay ayat berhasil disimpan",
           backgroundColor: StyleApp.primary, colorText: StyleApp.white);
       return;
     } catch (e) {
-      Get.snackbar("Error", "Gagal menyimpan ayat");
+      Get.snackbar("Error", "Yahh, gagal menyimpan ayat");
       print(e.toString());
       return;
     }
@@ -179,6 +180,16 @@ class HomeController extends GetxController {
 
   void setVerseSelected(String val) {
     verseSelected.value = val;
+  }
+
+  Future<void> removeVerseSaved(String id, int position) async {
+    try {
+      await databaseService.deleteSavedVerse(id);
+      databaseModelList.removeAt(position);
+    } catch (e) {
+      Get.snackbar("Error", "Yah, gagal menghapus ayat");
+      return;
+    }
   }
 
   void setChapterList(int val) {
