@@ -296,11 +296,13 @@ class HomeView extends GetView<HomeController> {
                             contentPadding: EdgeInsets.zero,
                             title: Text(
                               databaseList.abbr_verse.toString(),
-                              style: StyleApp.styleMed(15.sp, StyleApp.black),
+                              style: StyleApp.styleMed(
+                                  controller.titleSize.value, StyleApp.black),
                             ),
                             subtitle: Text(
                               databaseList.text!.toString(),
-                              style: StyleApp.styleReg(15.sp, StyleApp.black),
+                              style: StyleApp.styleReg(
+                                  controller.textSize.value, StyleApp.black),
                             ),
                             trailing: Expanded(
                                 child: IconButton(
@@ -409,7 +411,7 @@ class HomeView extends GetView<HomeController> {
               Text(
                 controller.abbrSelected.toString(),
                 style: StyleApp.styleMed(
-                  18.sp,
+                  controller.titleSize.value,
                   StyleApp.black,
                 ),
               ),
@@ -419,7 +421,7 @@ class HomeView extends GetView<HomeController> {
               Text(
                 controller.verseSelected.value.toString(),
                 style: StyleApp.styleReg(
-                  16.sp,
+                  controller.textSize.value,
                   StyleApp.black,
                 ),
               ),
