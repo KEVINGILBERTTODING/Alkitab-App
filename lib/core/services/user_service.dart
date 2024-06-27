@@ -7,6 +7,13 @@ import 'package:yesheis/core/constans/constans.dart';
 class UserService extends GetxService {
   late SharedPreferences _sharedPreferences;
 
+  @override
+  void onInit() async {
+    print('UserService onInit');
+    await initSharedPref();
+    super.onInit();
+  }
+
   Future<UserService> initSharedPref() async {
     _sharedPreferences = await SharedPreferences.getInstance();
     return this;
@@ -29,6 +36,15 @@ class UserService extends GetxService {
   Future<void> saveString(String key, String val) async {
     await _sharedPreferences.setString(key, val);
     return;
+  }
+
+  Future<void> saveDouble(String key, double val) async {
+    await _sharedPreferences.setDouble(key, val);
+    return;
+  }
+
+  double getDouble(String key) {
+    return _sharedPreferences.getDouble(key) ?? 0.0;
   }
 
   String getString(String key) {

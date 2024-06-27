@@ -6,6 +6,7 @@ import 'package:path/path.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:yesheis/core/constans/constans.dart';
 import 'package:yesheis/modules/home/controllers/home_controller.dart';
+import 'package:yesheis/modules/home/widget/bottom_sheet_setting.dart';
 import 'package:yesheis/modules/home/widget/verse_shimmer.dart';
 import 'package:yesheis/styles/style_app.dart';
 import 'package:dropdown_search/dropdown_search.dart';
@@ -68,9 +69,16 @@ class HomeView extends GetView<HomeController> {
                     SizedBox(
                       width: 10.w,
                     ),
-                    Icon(
-                      Icons.settings_outlined,
-                      color: StyleApp.light_black,
+                    GestureDetector(
+                      onTap: () {
+                        Get.bottomSheet(
+                          BottomSheetSetting(),
+                        );
+                      },
+                      child: Icon(
+                        Icons.settings_outlined,
+                        color: StyleApp.light_black,
+                      ),
                     )
                   ],
                 ),
@@ -126,8 +134,9 @@ class HomeView extends GetView<HomeController> {
                               ),
                               Text(
                                 controller.headerModel.value.bible?.title ?? '',
-                                style:
-                                    StyleApp.styleBold(20.sp, StyleApp.primary),
+                                style: StyleApp.styleBold(
+                                    controller.abbrFontSize.value,
+                                    StyleApp.primary),
                               ),
                               ListView.builder(
                                 scrollDirection: Axis.vertical,
@@ -152,7 +161,9 @@ class HomeView extends GetView<HomeController> {
                                               ? Text(
                                                   versesList[index].title!,
                                                   style: StyleApp.styleBold(
-                                                      17.sp, StyleApp.black),
+                                                      controller
+                                                          .titleSize.value,
+                                                      StyleApp.black),
                                                 )
                                               : Container(),
                                           SizedBox(
@@ -189,13 +200,15 @@ class HomeView extends GetView<HomeController> {
                                                       text:
                                                           '${versesList[index].number} ',
                                                       style: StyleApp.styleBold(
-                                                          10.sp,
+                                                          controller
+                                                              .verseSize.value,
                                                           StyleApp.primary)),
                                                   TextSpan(
                                                       text: versesList[index]
                                                           .text,
                                                       style: StyleApp.styleReg(
-                                                          16.sp,
+                                                          controller
+                                                              .textSize.value,
                                                           StyleApp.black)),
                                                 ],
                                               ),

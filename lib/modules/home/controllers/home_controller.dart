@@ -1,9 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:yesheis/core/constans/constans.dart';
@@ -35,6 +37,13 @@ class HomeController extends GetxController {
   RxList<DatabaseModel> databaseModelList = <DatabaseModel>[].obs;
   late DatabaseService databaseService;
   late UserService userService;
+  RxDouble abbrFontSize = 20.sp.obs,
+      titleSize = 17.sp.obs,
+      textSize = 16.sp.obs,
+      verseSize = 10.sp.obs,
+      textSizeMin = 16.sp.obs,
+      textSizeMax = 50.sp.obs,
+      textCurrentSize = 16.sp.obs;
 
   @override
   void onInit() async {
@@ -45,6 +54,7 @@ class HomeController extends GetxController {
   // Metode async terpisah
   Future<void> _initialize() async {
     userService = Get.find<UserService>();
+    initFontSize();
     await initLastAbbrVerse();
     await getBook();
     databaseService = Get.find<DatabaseService>();
@@ -65,6 +75,32 @@ class HomeController extends GetxController {
     }
 
     return await getChapter(abbr, verse);
+  }
+
+  void initFontSize() {
+    final abbrSize = userService.getDouble(Constans.PREF_SIZE_ABBR);
+    final titleFontSize = userService.getDouble(Constans.PREF_SIZE_TITLE);
+    final textFontSize = userService.getDouble(Constans.PREF_SIZE_TEXT);
+    final verseFontSize = userService.getDouble(Constans.PREF_SIZE_VERSE);
+
+    if (abbrSize != 0.0) {
+      abbrFontSize.value = abbrSize;
+    }
+
+    if (titleFontSize != 0.0) {
+      titleSize.value = titleFontSize;
+    }
+
+    if (textFontSize != 0.0) {
+      textSize.value = textFontSize;
+      textCurrentSize.value = textFontSize;
+    }
+
+    if (verseFontSize != 0.0) {
+      verseSize.value = verseFontSize;
+    }
+
+    print('size current value : $textCurrentSize');
   }
 
   Future<void> getBook() async {
@@ -203,6 +239,29 @@ class HomeController extends GetxController {
       await userService.saveString(Constans.PREF_LAST_ABBR_SAVED, abbr);
       await userService.saveInt(Constans.PREF_LAST_VERSE_SAVED, verse);
     }
+  }
+
+  Future<void> saveSetting(double val) async {
+    double stateAbbrSize = val + 4;
+    double stateTitleSize = val + 1;
+    double stateTextSize = val;
+    double stateVerseSize = val - 6;
+
+    // set size
+    abbrFontSize.value = stateAbbrSize.toDouble();
+    titleSize.value = stateTitleSize.toDouble();
+    textSize.value = stateTextSize.toDouble();
+    verseSize.value = stateVerseSize.toDouble();
+    textCurrentSize.value = stateTextSize.toDouble();
+
+    await userService.saveDouble(
+        Constans.PREF_SIZE_ABBR, stateAbbrSize.toDouble());
+    await userService.saveDouble(
+        Constans.PREF_SIZE_TITLE, stateTitleSize.toDouble());
+    await userService.saveDouble(
+        Constans.PREF_SIZE_TEXT, stateTextSize.toDouble());
+    await userService.saveDouble(
+        Constans.PREF_SIZE_VERSE, stateVerseSize.toDouble());
   }
 
   void setVerseSelected(String val) {

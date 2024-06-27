@@ -1,6 +1,9 @@
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class Constans {
   static const INIT_LAST_ABBR = "kej";
   static const INIT_LAST_VERSE = 1;
+
   static const PREF_FIRST_TIME = 'pref_first_time';
   static const APPNAME = 'Firman Hidup';
   static const TXT_ONBOARDING =
@@ -12,4 +15,8 @@ class Constans {
   static const FIELD_DB = 'save_verse_db';
   static const PREF_LAST_ABBR_SAVED = "pref_last_abbr";
   static const PREF_LAST_VERSE_SAVED = "pref_last_verse";
+  static const PREF_SIZE_ABBR = "pref_size_abbr";
+  static const PREF_SIZE_TEXT = "pref_size_text";
+  static const PREF_SIZE_TITLE = "pref_size_title";
+  static const PREF_SIZE_VERSE = "pref_size_text";
 }

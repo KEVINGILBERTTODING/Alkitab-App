@@ -19,4 +19,8 @@ class StyleApp {
   static styleMed(double size, Color color) {
     return TextStyle(fontFamily: 'rbmed', fontSize: size, color: color);
   }
+
+  static styleMedCenter(double size, Color color) {
+    return TextStyle(fontFamily: 'rbmed', fontSize: size, color: color);
+  }
 }

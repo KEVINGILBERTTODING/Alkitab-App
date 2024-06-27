@@ -16,10 +16,8 @@ void main() async {
   });
   await Get.putAsync<DatabaseService>(() async => DatabaseService());
 
-  final isFirsttime = userService.isFirstTime();
-
   runApp(MainApp(
-    isFirstTime: isFirsttime,
+    isFirstTime: userService.isFirstTime(),
   ));
 }
 
