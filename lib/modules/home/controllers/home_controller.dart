@@ -44,7 +44,8 @@ class HomeController extends GetxController {
       textSizeMin = 16.sp.obs,
       textSizeMax = 50.sp.obs,
       textCurrentSize = 16.sp.obs;
-
+  RxBool isSettingButtonClicked = false.obs;
+  RxBool isBookmarkButtonClicked = false.obs;
   @override
   void onInit() async {
     super.onInit();

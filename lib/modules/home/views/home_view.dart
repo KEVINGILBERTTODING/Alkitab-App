@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:path/path.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:yesheis/core/constans/constans.dart';
 import 'package:yesheis/modules/home/controllers/home_controller.dart';
 import 'package:yesheis/modules/home/widget/bottom_sheet_setting.dart';
@@ -40,10 +37,11 @@ class HomeView extends GetView<HomeController> {
                   trailing: IconButton(
                     onPressed: () {
                       Get.bottomSheet(searchBottomSheet(controller));
+                      ;
                     },
                     icon: Icon(
                       Icons.search,
-                      color: Colors.white,
+                      color: StyleApp.white,
                     ),
                     style: ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(StyleApp.primary),
@@ -56,29 +54,45 @@ class HomeView extends GetView<HomeController> {
                   children: [
                     GestureDetector(
                       onTap: () async {
+                        controller.isBookmarkButtonClicked.value = true;
                         await controller.getVerseSaved();
                         Get.bottomSheet(
                           bottom_sheet_bookmark(controller),
-                        );
+                        ).whenComplete(() {
+                          controller.isBookmarkButtonClicked.value = false;
+                        });
                       },
-                      child: Icon(
-                        Icons.bookmark_border_outlined,
-                        color: StyleApp.light_black,
-                      ),
+                      child: controller.isBookmarkButtonClicked.value
+                          ? Icon(
+                              Icons.bookmark,
+                              color: StyleApp.primary,
+                            )
+                          : Icon(
+                              Icons.bookmark_border_outlined,
+                              color: StyleApp.black,
+                            ),
                     ),
                     SizedBox(
                       width: 10.w,
                     ),
                     GestureDetector(
                       onTap: () {
+                        controller.isSettingButtonClicked.value = true;
                         Get.bottomSheet(
                           BottomSheetSetting(),
-                        );
+                        ).whenComplete(() {
+                          controller.isSettingButtonClicked.value = false;
+                        });
                       },
-                      child: Icon(
-                        Icons.settings_outlined,
-                        color: StyleApp.light_black,
-                      ),
+                      child: controller.isSettingButtonClicked.value
+                          ? Icon(
+                              Icons.settings,
+                              color: StyleApp.primary,
+                            )
+                          : Icon(
+                              Icons.settings_outlined,
+                              color: StyleApp.black,
+                            ),
                     )
                   ],
                 ),
