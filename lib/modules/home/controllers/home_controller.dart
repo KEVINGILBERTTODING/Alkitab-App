@@ -66,14 +66,25 @@ class HomeController extends GetxController {
     String lastAbbr =
         await userService.getString(Constans.PREF_LAST_ABBR_SAVED);
     int lastVerse = await userService.getInt(Constans.PREF_LAST_VERSE_SAVED);
+    int lastVerseLength =
+        await userService.getInt(Constans.PREF_LAST_VERSE_LENGTH_SAVED);
 
-    if (lastAbbr != "" && lastVerse != 0) {
+    if (lastAbbr != "" && lastVerse != 0 && lastVerseLength != 0) {
       abbr = lastAbbr;
       verse = lastVerse;
+      print('kevin: $lastVerseLength');
+      for (var i = 1; i < lastVerseLength; i++) {
+        chapterList.add(i);
+      }
     } else {
       abbr = Constans.INIT_LAST_ABBR;
       verse = Constans.INIT_LAST_VERSE;
+      for (var i = 1; i < 50; i++) {
+        chapterList.add(i);
+      }
     }
+
+    print(chapterList.length);
 
     return await getChapter(abbr, verse);
   }
@@ -239,6 +250,8 @@ class HomeController extends GetxController {
     if (abbr != "" && verse != 0) {
       await userService.saveString(Constans.PREF_LAST_ABBR_SAVED, abbr);
       await userService.saveInt(Constans.PREF_LAST_VERSE_SAVED, verse);
+      await userService.saveInt(
+          Constans.PREF_LAST_VERSE_LENGTH_SAVED, chapterList.length);
     }
   }
 

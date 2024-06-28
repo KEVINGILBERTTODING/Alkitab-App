@@ -19,7 +19,7 @@ class HomeView extends GetView<HomeController> {
       body: Obx(
         () => SafeArea(
           child: Padding(
-            padding: EdgeInsets.all(15.w),
+            padding: EdgeInsets.only(right: 15.w, left: 15.w, bottom: 8.w),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -152,87 +152,133 @@ class HomeView extends GetView<HomeController> {
                                     controller.abbrFontSize.value,
                                     StyleApp.primary),
                               ),
-                              ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: controller.headerModel.value.bible
-                                    ?.book?.chapter?.verses?.length,
-                                itemBuilder: (context, index) {
-                                  final versesList = controller.headerModel
-                                          .value.bible?.book?.chapter?.verses ??
-                                      [];
-                                  if (!versesList.isEmpty) {
-                                    return Padding(
-                                      padding: EdgeInsets.only(top: 8.h),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          versesList[index].title != null
-                                              ? Text(
-                                                  versesList[index].title!,
-                                                  style: StyleApp.styleBold(
-                                                      controller
-                                                          .titleSize.value,
-                                                      StyleApp.black),
-                                                )
-                                              : Container(),
-                                          SizedBox(
-                                            height: 5.h,
-                                          ),
-                                          GestureDetector(
-                                            onTap: () {
-                                              if (versesList[index].text !=
-                                                  null) {
-                                                final abbrVerseSelected =
-                                                    '${controller.headerModel.value.bible?.book?.name.toString()} ${controller.verse} : ${controller.headerModel.value.bible?.book?.chapter?.verses?[index].number}';
-                                                final idDbGenerate =
-                                                    '${controller.headerModel.value.bible?.book?.book_id!}-${controller.verse}-${controller.headerModel.value.bible?.book?.chapter?.verses?[index].number}';
-                                                controller.verseSelected.value =
-                                                    versesList[index].text!;
-                                                controller.abbrSelected.value =
-                                                    abbrVerseSelected;
+                              GestureDetector(
+                                onPanUpdate: (details) async {
+                                  if (controller.isLoading.value != true &&
+                                      !controller.bookModelList.isEmpty) {
+                                    const double swipeThreshold =
+                                        8.0; // Set your desired threshold value
 
-                                                controller.idDatabase =
-                                                    idDbGenerate.toString();
+                                    final verseNext = controller.verse + 1;
+                                    final versePrev = controller.verse - 1;
 
-                                                Get.bottomSheet(
-                                                        bottomSheetVerse(
-                                                            controller))
-                                                    .whenComplete(() {
-                                                  controller.resetState();
-                                                });
-                                              }
-                                            },
-                                            child: RichText(
-                                              text: TextSpan(
-                                                children: [
-                                                  TextSpan(
-                                                      text:
-                                                          '${versesList[index].number} ',
-                                                      style: StyleApp.styleBold(
-                                                          controller
-                                                              .verseSize.value,
-                                                          StyleApp.primary)),
-                                                  TextSpan(
-                                                      text: versesList[index]
-                                                          .text,
-                                                      style: StyleApp.styleReg(
-                                                          controller
-                                                              .textSize.value,
-                                                          StyleApp.black)),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    );
+                                    // kiri ke kanan
+                                    if (details.delta.dx > swipeThreshold) {
+                                      if (versePrev != 0) {
+                                        controller.verse = versePrev;
+                                        await controller.getChapter(
+                                            controller.abbr, versePrev);
+                                        await controller.saveLastVerse();
+                                      }
+                                    }
+
+                                    // kanan ke kiri
+                                    if (details.delta.dx < -swipeThreshold) {
+                                      if (controller.chapterList.length >
+                                          verseNext) {
+                                        controller.verse = verseNext;
+                                        await controller.getChapter(
+                                            controller.abbr, verseNext);
+                                        await controller.saveLastVerse();
+                                      }
+                                    }
                                   }
                                 },
+                                child: ListView.builder(
+                                  scrollDirection: Axis.vertical,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  shrinkWrap: true,
+                                  itemCount: controller.headerModel.value.bible
+                                      ?.book?.chapter?.verses?.length,
+                                  itemBuilder: (context, index) {
+                                    final versesList = controller
+                                            .headerModel
+                                            .value
+                                            .bible
+                                            ?.book
+                                            ?.chapter
+                                            ?.verses ??
+                                        [];
+                                    if (!versesList.isEmpty) {
+                                      return Padding(
+                                        padding: EdgeInsets.only(top: 8.h),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            versesList[index].title != null
+                                                ? Text(
+                                                    versesList[index].title!,
+                                                    style: StyleApp.styleBold(
+                                                        controller
+                                                            .titleSize.value,
+                                                        StyleApp.black),
+                                                  )
+                                                : Container(),
+                                            SizedBox(
+                                              height: 5.h,
+                                            ),
+                                            GestureDetector(
+                                              onTap: () {
+                                                if (versesList[index].text !=
+                                                    null) {
+                                                  final abbrVerseSelected =
+                                                      '${controller.headerModel.value.bible?.book?.name.toString()} ${controller.verse} : ${controller.headerModel.value.bible?.book?.chapter?.verses?[index].number}';
+                                                  final idDbGenerate =
+                                                      '${controller.headerModel.value.bible?.book?.book_id!}-${controller.verse}-${controller.headerModel.value.bible?.book?.chapter?.verses?[index].number}';
+                                                  controller
+                                                          .verseSelected.value =
+                                                      versesList[index].text!;
+                                                  controller
+                                                          .abbrSelected.value =
+                                                      abbrVerseSelected;
+
+                                                  controller.idDatabase =
+                                                      idDbGenerate.toString();
+
+                                                  Get.bottomSheet(
+                                                          bottomSheetVerse(
+                                                              controller))
+                                                      .whenComplete(() {
+                                                    controller.resetState();
+                                                  });
+                                                }
+                                              },
+                                              child: RichText(
+                                                text: TextSpan(
+                                                  children: [
+                                                    TextSpan(
+                                                        text:
+                                                            '${versesList[index].number} ',
+                                                        style:
+                                                            StyleApp.styleBold(
+                                                                controller
+                                                                    .verseSize
+                                                                    .value,
+                                                                StyleApp
+                                                                    .primary)),
+                                                    TextSpan(
+                                                        text: versesList[index]
+                                                            .text,
+                                                        style:
+                                                            StyleApp.styleReg(
+                                                                controller
+                                                                    .textSize
+                                                                    .value,
+                                                                StyleApp
+                                                                    .black)),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    }
+                                  },
+                                ),
                               ),
                             ],
                           ),

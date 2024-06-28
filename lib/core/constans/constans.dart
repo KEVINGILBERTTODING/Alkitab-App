@@ -15,6 +15,7 @@ class Constans {
   static const FIELD_DB = 'save_verse_db';
   static const PREF_LAST_ABBR_SAVED = "pref_last_abbr";
   static const PREF_LAST_VERSE_SAVED = "pref_last_verse";
+  static const PREF_LAST_VERSE_LENGTH_SAVED = "pref_last_verse_length";
   static const PREF_SIZE_ABBR = "pref_size_abbr";
   static const PREF_SIZE_TEXT = "pref_size_text";
   static const PREF_SIZE_TITLE = "pref_size_title";
