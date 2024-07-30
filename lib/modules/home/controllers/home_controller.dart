@@ -4,12 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/get_state_manager.dart';
+import 'package:google_generative_ai/google_generative_ai.dart';
+import 'dart:io';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/state_manager.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:yesheis/core/constans/constans.dart';
 import 'package:yesheis/core/constans/response_constans.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:yesheis/core/models/book/book_model.dart';
 import 'package:yesheis/core/models/database/database_model.dart';
 import 'package:yesheis/core/models/passage/header/headers_model.dart';
@@ -24,6 +29,7 @@ class HomeController extends GetxController {
   RxBool isLoading = false.obs;
   RxList<BookModel> bookModelList = <BookModel>[].obs;
   RxList<int> chapterList = <int>[].obs;
+  RxBool isLoadingAi = false.obs;
   int verse = 0;
   String abbr = "";
   Rx<HeadersModel> headerModel = HeadersModel().obs;
@@ -32,8 +38,10 @@ class HomeController extends GetxController {
   String idDatabase = "";
   RxBool isPlaying = false.obs;
   FlutterTts flutterTts = FlutterTts();
+  RxString aiResult = "".obs;
   RxBool isVerseSaved = false.obs;
   RxBool isLoadingLoadSavedVerse = false.obs;
+  String apiKey = "";
   RxList<DatabaseModel> databaseModelList = <DatabaseModel>[].obs;
   late DatabaseService databaseService;
   late UserService userService;
@@ -46,6 +54,7 @@ class HomeController extends GetxController {
       textCurrentSize = 16.sp.obs;
   RxBool isSettingButtonClicked = false.obs;
   RxBool isBookmarkButtonClicked = false.obs;
+
   @override
   void onInit() async {
     super.onInit();
@@ -60,6 +69,8 @@ class HomeController extends GetxController {
     await getBook();
     databaseService = Get.find<DatabaseService>();
     await databaseService.database;
+    await dotenv.load(fileName: ".env");
+    apiKey = dotenv.env['API_KEY'] ?? "";
   }
 
   Future initLastAbbrVerse() async {
@@ -87,6 +98,29 @@ class HomeController extends GetxController {
     print(chapterList.length);
 
     return await getChapter(abbr, verse);
+  }
+
+  Future<void> prompToAI(String text) async {
+    isLoadingAi.value = true;
+    if (apiKey == "") {
+      Get.snackbar("Error", "Terjadi kesalahan");
+      aiResult.value = "";
+    }
+
+    try {
+      final model = GenerativeModel(model: 'gemini-1.5-flash', apiKey: apiKey);
+      final content = [Content.text(text)];
+      final response = await model.generateContent(content);
+      isLoadingAi.value = false;
+      print(response.text);
+      aiResult.value = response.text ?? "";
+    } catch (e) {
+      isLoadingAi.value = false;
+
+      Get.snackbar("Error", "Something went wrong");
+      print(e);
+      aiResult.value = "";
+    }
   }
 
   void initFontSize() {
@@ -196,6 +230,7 @@ class HomeController extends GetxController {
     abbrSelected.value = "";
     isPlaying.value = false;
     isVerseSaved.value = false;
+    aiResult.value = "";
   }
 
   void voiceSpeak() async {

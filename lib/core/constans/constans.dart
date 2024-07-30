@@ -20,4 +20,6 @@ class Constans {
   static const PREF_SIZE_TEXT = "pref_size_text";
   static const PREF_SIZE_TITLE = "pref_size_title";
   static const PREF_SIZE_VERSE = "pref_size_text";
+  static const PROMPT_AI =
+      "jelaskan secara lengkap apa arti dan maksud dari alkitab ayat ";
 }

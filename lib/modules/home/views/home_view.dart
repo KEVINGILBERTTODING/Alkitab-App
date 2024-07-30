@@ -485,6 +485,56 @@ class HomeView extends GetView<HomeController> {
                   StyleApp.black,
                 ),
               ),
+              SizedBox(
+                height: 8.h,
+              ),
+              Obx(
+                () => controller.isLoadingAi.value
+                    ? VerseShimmer()
+                    : controller.aiResult.value != ""
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 8.h,
+                              ),
+                              Text(
+                                "Penjelasan Ayat:",
+                                style: StyleApp.styleMed(
+                                  controller.textSize.value,
+                                  StyleApp.black,
+                                ),
+                              ),
+                              Text(
+                                controller.aiResult.toString(),
+                                style: StyleApp.styleReg(
+                                  controller.textSize.value,
+                                  StyleApp.black,
+                                ),
+                              )
+                            ],
+                          )
+                        : TextButton(
+                            onPressed: () async {
+                              if (controller.abbrSelected.value == "") {
+                                Get.snackbar("Error", "Ayat tidak ditemukan");
+                                return;
+                              }
+
+                              await controller.prompToAI(
+                                  '${Constans.PROMPT_AI} ${controller.abbrSelected}');
+                            },
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    WidgetStatePropertyAll(StyleApp.primary)),
+                            child: Text(
+                              "Tanya AI",
+                              style: StyleApp.styleMed(
+                                  controller.textSize.value, StyleApp.white),
+                            ),
+                          ),
+              ),
             ],
           )),
         ),
