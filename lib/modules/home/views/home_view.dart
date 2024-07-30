@@ -529,7 +529,7 @@ class HomeView extends GetView<HomeController> {
                                 backgroundColor:
                                     WidgetStatePropertyAll(StyleApp.primary)),
                             child: Text(
-                              "Tanya AI",
+                              "Lihat penjelasan",
                               style: StyleApp.styleMed(
                                   controller.textSize.value, StyleApp.white),
                             ),
